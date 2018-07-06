@@ -1,43 +1,25 @@
-var http = require('http');
-var fs = require('fs');
-var url = require('url');
+var http = require("http"); 
+      var fs = require("fs");
+http.createServer(function(req,res) {
+  var path = req.url.toLowerCase();
+  switch(path) {
+    case '/':
+ 
+fs.readFile('public/home.html', function (err, data) {
+   if (err) return console.error(err);
 
-// Create a server
-http.createServer( function (request, response) {  
-   // Parse the request containing file name
-   var pathname = url.parse(request.url).pathname;
-   
-   // Print the name of the file for which request is made.
-   console.log("Request for " + pathname + " received.");
-
-   if(pathname == "/"){
-      pathname = "/public/home.html";
-   } else if (pathname == "/about") {
-      pathname = "/package.json"
-   } else {
-      pathname = "error 404"
-   }
-   
-   // Read the requested file content from file system
-   fs.readFile(pathname.substr(1), function (err, data) {
-      if (err) {
-         console.log(err);
-         // HTTP Status: 404 : NOT FOUND
-         // Content Type: text/plain
-         response.writeHead(404, {'Content-Type': 'text/html'});
-      }else {	
-         //Page found	  
-         // HTTP Status: 200 : OK
-         // Content Type: text/plain
-         response.writeHead(200, {'Content-Type': 'text/html'});	
-         
-         // Write the content of the file to response body
-         response.write(data.toString());		
-      }
-      // Send the response body 
-      response.end();
-   });   
-}).listen(3000);
-
-// Console will print the message
-console.log('Server running at http://127.0.0.1:3000/');
+      res.writeHead(200, {'Content-Type': 'text/html'});
+      res.end(data);
+});
+      break;
+      
+    case '/about':
+      res.writeHead(200, {'Content-Type': 'text/plain'});
+      res.end('About page');
+      break;
+    default:
+      res.writeHead(404, {'Content-Type': 'text/plain'});
+      res.end('Not found');
+      break;
+    }
+}).listen(process.env.PORT || 3000);
