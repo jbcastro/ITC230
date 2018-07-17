@@ -1,54 +1,65 @@
-var http = require("http"); 
-      var fs = require("fs");
-      var episodes = require("./lib/episodes.js");
-      var url = require('url');
-      
-http.createServer(function(req,res) {
-  //var path = req.url.toLowerCase();
-  var path = url.parse(req.url).pathname;
-  
+'use strict'
+var express = require("express");
+var app = express();
+var episodes = require("./lib/episodes.js");
+var laura = exports.getOne;
+app.use(express.static('public'));
 
-  
-  switch(path) {
-    case '/':
- 
-fs.readFile('public/home.html', function (err, data) {
-   if (err) return console.error(err);
-
-      res.writeHead(200, {'Content-Type': 'text/html'});
-      res.end(data);
+// send static file as response
+app.get('/', (req, res) => {
+ //res.type('text/html');
+ res.sendFile(__dirname + '/public/home.html'); 
 });
-      break;
-      
-    case '/get':
-      var thisquery=url.parse(req.url, true).query;
-      res.writeHead(200, {'Content-Type': 'text/plain'});
-      
-      if(episodes.getOne(thisquery.epnum)){
-      res.writeHead(200, {'Content-Type': 'text/plain'});
-      res.write(JSON.stringify(episodes.getOne(thisquery.epnum)));
-      } else{ 
-          res.writeHead(404, {'Content-Type': 'text/plain'});
-        res.write(JSON.stringify({wat:'Not an episode, or you deleted it.'}));
-        res.end();
-      }
-      res.end();
-      break;
-      
-      
-       case '/kill':
-      var thisquery=url.parse(req.url, true).query;
-      
-      res.writeHead(200, {'Content-Type': 'text/plain'});
-      res.write(JSON.stringify(episodes.killOne(thisquery.epnum)));
-      res.end();
-      
-      break;
-      
-      
-    default:
-      res.writeHead(404, {'Content-Type': 'text/plain'});
-      res.end('Not found');
-      break;
-    }
-}).listen(process.env.PORT || 3000);
+
+app.get('/get', (req,res) => {
+ 
+ let result = episodes.getOne(req.query.epnum);
+ 
+  res.render(__dirname + '/views/details.html', {epnum: req.query.epnum, result: result }); 
+  
+});
+
+//app.post('./views/details.html', (req, res) => {
+  //console.log(req.body); // display parsed form submission
+//app.get('/get', (req,res) => {
+ //let result = episodes.get(req.query.epnum);
+ //res.render('details', {epnum: req.query.epnum, result: result });
+//});
+
+app.post('/get', (req, res) => {
+  console.log(req.body); // display parsed form submission
+});
+
+let handlebars =  require("express-handlebars");
+app.engine(".html", handlebars({extname: '.html'}));
+app.set("view engine", ".html");
+
+// send content of 'home' view
+app.get('/', (req,res) => {
+ res.render('home');
+});
+
+
+// define 404 handler
+app.use( (req,res) => {
+ res.type('text/plain'); 
+ res.status(404);
+ res.send('404 - Not found');
+});
+app.set('port', process.env.PORT || 3000);
+app.use(express.static(__dirname + '/public')); // set location for static files
+app.use(require("body-parser").urlencoded({extended: true})); // parse form submissions
+
+app.listen(app.get('port'), () => {
+ console.log('Express started'); 
+});
+
+
+
+
+
+// send plain text response
+//app.get('/about', (req, res) => {
+ //res.type('text/plain');
+ //res.send('About page');
+//});
