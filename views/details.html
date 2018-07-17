@@ -5,8 +5,19 @@
     <li>Title: {{ result.title }}
     <li>Season: {{ result.season }}
     <li>Epnum: {{ result.epnum }}
+    
+    <form action = "https://itc-230-jbcastro.c9users.io/delete" method = "DELETE">
+         
+         
+         <input type = "submit"  name = epnum value = {{result.epnum}} >
+         <p>
+        <button> <a href="https://itc-230-jbcastro.c9users.io">Home</a></button>
+        </p>
   {{else}}
     not found
   {{/if}}
+ <script>
+   
+ </script>
 </body>
 </html

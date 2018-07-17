@@ -11,28 +11,36 @@ app.get('/', (req, res) => {
  res.sendFile(__dirname + '/public/home.html'); 
 });
 
-app.get('/get', (req,res) => {
- 
- let result = episodes.getOne(req.query.epnum);
- 
-  res.render(__dirname + '/views/details.html', {epnum: req.query.epnum, result: result }); 
-  
-});
 
-//app.post('./views/details.html', (req, res) => {
-  //console.log(req.body); // display parsed form submission
-//app.get('/get', (req,res) => {
- //let result = episodes.get(req.query.epnum);
- //res.render('details', {epnum: req.query.epnum, result: result });
-//});
+
+
+app.get('/get', (req,res) => {
+ let result = episodes.getOne(req.query.epnum);
+ res.render(__dirname + '/views/details.html', {epnum: req.query.epnum, result: result }); 
+});
 
 app.post('/get', (req, res) => {
   console.log(req.body); // display parsed form submission
 });
 
+
+
+
+app.get('/delete', (req,res) => {
+ let result = episodes.killOne(req.query.epnum);
+  res.render(__dirname + '/views/delete.html', {epnum: req.query.epnum, result: result }); 
+  
+});
+app.post('/delete', (req, res) => {
+  console.log(req.body); // display parsed form submission
+});
+
+
 let handlebars =  require("express-handlebars");
 app.engine(".html", handlebars({extname: '.html'}));
 app.set("view engine", ".html");
+
+
 
 // send content of 'home' view
 app.get('/', (req,res) => {
@@ -58,8 +66,3 @@ app.listen(app.get('port'), () => {
 
 
 
-// send plain text response
-//app.get('/about', (req, res) => {
- //res.type('text/plain');
- //res.send('About page');
-//});
