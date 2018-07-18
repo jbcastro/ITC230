@@ -5,16 +5,16 @@
     <li>Title: {{ result.title }}
     <li>Season: {{ result.season }}
     <li>Epnum: {{ result.epnum }}
-    
-    <form action = delete method = "DELETE">
-         
-         
-         <input type = "submit"  name = epnum value = {{result.epnum}} >
+    <p>
+    <a href="/delete?epnum={{result.epnum}}">Delete?</a>
+</p>
          <p>
         <button> <a href=/>Home</a></button>
         </p>
   {{else}}
-    not found
+ <p> Not Found</p>
+  <a href=/>Home</a>
+    
   {{/if}}
  <script>
    

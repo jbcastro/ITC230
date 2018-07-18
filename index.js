@@ -2,8 +2,8 @@
 var express = require("express");
 var app = express();
 var episodes = require("./lib/episodes.js");
-var laura = exports.getOne;
 app.use(express.static('public'));
+
 
 // send static file as response
 app.get('/', (req, res) => {
