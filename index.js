@@ -1,27 +1,47 @@
-'use strict'
-var express = require("express");
-var app = express();
+'use strict';
+const express = require("express");
+const app = express();
 var episodes = require("./lib/episodes.js");
+var episodeMethods = require ("./models/episodeMethods.js");
+var Episode = require ("./models/episode.js");
+var mongo = require ('mongodb');
 app.use(express.static('public'));
 
 
-// send static file as response
-app.get('/', (req, res) => {
- //res.type('text/html');
- res.sendFile(__dirname + '/public/home.html'); 
+
+app.get('/', (req, res, next) => {
+  episodeMethods.getAll().then((epnum) => {
+    res.render('../public/home.html', {episodes: epnum }); 
+  }).catch((err) =>{
+    return next(err);
+  });
 });
 
-
-
-
-app.get('/get', (req,res) => {
- let result = episodes.getOne(req.query.epnum);
- res.render(__dirname + '/views/details.html', {epnum: req.query.epnum, result: result }); 
+app.get('/get', (req, res, next) => {
+ episodeMethods.getOne().then((title) => {
+     res.render('../views/details.html', {episodes: title}); 
+  }).catch((err) =>{
+    return next(err);
+ });
 });
 
 app.post('/get', (req, res) => {
   console.log(req.body); // display parsed form submission
 });
+
+//app.get('/get', (req, res, next) => {
+  //Episode.find({}, function (err, epnum) {
+   // if (err) return next(err);
+    //console.log(epnum);
+  //  res.render('../views/details.html', {episodes: epnum }); 
+ //// });
+//});
+//app.get('/get', (req,res) => {
+// let result = episodeMethods.getOne(req.query.epnum);
+// res.render(__dirname + '/views/details.html', {epnum: req.query.epnum, result: result }); 
+//});
+
+
 
 
 
