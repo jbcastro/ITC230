@@ -1,17 +1,40 @@
-var Episode = require ("../models/episode.js");
+var Episodes = require ("../models/episode.js");
 
 
+exports.getAll = () => {
+  return Episodes.find({}, (err, result) => {
+    if (err) {
+      return err;
+    } 
+        //console.log(result);
 
-exports.getAll = (title) => {
-  return Episode.find({}, (err, result) => {
-     if (err) throw err;
-    console.log(title);
+    return result;
+    
   });
+  
+  
 };
 
-exports.getOne = (title) => {
-  return Episode.findOne({}, (err, result) => {
+exports.getOne = (epnum1) => {
+  return Episodes.findOne({epnum: epnum1}, (err, result) => {
+    if (err) {
+      return err;
+    } 
+    //console.log(result);
+    return result;
+    
+  });
+  
+};
+
+exports.killOne = (epnum1) => {
+  
+  return Episodes.findOne({epnum: epnum1}, (err, result) =>{
     if (err) throw err;
-    console.log(title);
+    
+    result.remove(function(err){
+      if (err) throw err;
+      //console.log(epnum1);
+    });
   });
 };

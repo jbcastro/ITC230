@@ -8,16 +8,18 @@ var conn = mongoose.connection;
 conn.on('error', console.error.bind(console, 'connection error:'));
 
 var mySchema = mongoose.Schema({
-epnum: { type: Number, required: true },
-season: Number,
+epnum: { type: String, required: true },
+season: String,
   title: String,
  }); 
- //var Episodes = mongoose.model('Episodes', mySchema);
+ //var Episodes = mongoose.model('Episode', mySchema);
+ 
 
 
 
 
 module.exports = mongoose.model('Episode', mySchema);
+
 
 
 //Episodes.find({}, function (err, epnum){
@@ -26,9 +28,9 @@ module.exports = mongoose.model('Episode', mySchema);
 //})
 
 //Episodes.findOne({title: 'King Size Homer'}, (err,episodes)=> {
- // if (err) throw err;
+  //if (err) throw err;
 //console.log(episodes);
-//})
+//});
 
 //Episodes.findOneAndUpdate({ title: 'Lisa on Ice' }, { title: 'LISA ON ICE' }, function(err, episodes) {
   //if (err) throw err;

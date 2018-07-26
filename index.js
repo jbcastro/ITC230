@@ -1,25 +1,28 @@
 'use strict';
 const express = require("express");
 const app = express();
-var episodes = require("./lib/episodes.js");
+//var episodes = require("./lib/episodes.js");
+
 var episodeMethods = require ("./models/episodeMethods.js");
-var Episode = require ("./models/episode.js");
-var mongo = require ('mongodb');
 app.use(express.static('public'));
 
+let handlebars =  require("express-handlebars");
+app.engine(".html", handlebars({extname: '.html'}));
+app.set("view engine", ".html");
 
 
 app.get('/', (req, res, next) => {
-  episodeMethods.getAll().then((epnum) => {
-    res.render('../public/home.html', {episodes: epnum }); 
+  episodeMethods.getAll().then((items) => {
+    res.render('../public/home.html', {episodes: items }); 
   }).catch((err) =>{
     return next(err);
   });
 });
 
 app.get('/get', (req, res, next) => {
- episodeMethods.getOne().then((title) => {
-     res.render('../views/details.html', {episodes: title}); 
+ //console.log(req.query);
+ episodeMethods.getOne(req.query.epnum).then((items) => {
+     res.render('details', {result: items}); 
   }).catch((err) =>{
     return next(err);
  });
@@ -29,6 +32,23 @@ app.post('/get', (req, res) => {
   console.log(req.body); // display parsed form submission
 });
 
+
+
+
+app.get('/delete', (req,res, next) => {
+ episodeMethods.killOne(req.query.epnum).then((items) => {
+     res.render('delete', {result: items}); 
+  }).catch((err) =>{
+    return next(err);
+ });
+});
+
+app.post('/delete', (req, res) => {
+  console.log(req.body); // display parsed form submission
+});
+
+
+
 //app.get('/get', (req, res, next) => {
   //Episode.find({}, function (err, epnum) {
    // if (err) return next(err);
@@ -36,30 +56,11 @@ app.post('/get', (req, res) => {
   //  res.render('../views/details.html', {episodes: epnum }); 
  //// });
 //});
+
 //app.get('/get', (req,res) => {
 // let result = episodeMethods.getOne(req.query.epnum);
 // res.render(__dirname + '/views/details.html', {epnum: req.query.epnum, result: result }); 
 //});
-
-
-
-
-
-
-app.get('/delete', (req,res) => {
- let result = episodes.killOne(req.query.epnum);
-  res.render(__dirname + '/views/delete.html', {epnum: req.query.epnum, result: result }); 
-  
-});
-app.post('/delete', (req, res) => {
-  console.log(req.body); // display parsed form submission
-});
-
-
-let handlebars =  require("express-handlebars");
-app.engine(".html", handlebars({extname: '.html'}));
-app.set("view engine", ".html");
-
 
 
 // send content of 'home' view
