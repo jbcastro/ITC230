@@ -12,7 +12,7 @@ epnum: { type: String, required: true },
 season: String,
   title: String,
  }); 
- //var Episodes = mongoose.model('Episode', mySchema);
+// var Episodes = mongoose.model('Episode', mySchema);
  
 
 
@@ -32,10 +32,10 @@ module.exports = mongoose.model('Episode', mySchema);
 //console.log(episodes);
 //});
 
-//Episodes.findOneAndUpdate({ title: 'Lisa on Ice' }, { title: 'LISA ON ICE' }, function(err, episodes) {
-  //if (err) throw err;
+// Episodes.create({epnum:'9'} , function(err, episodes) {
+//   if (err) throw err;
 
-  // we have the updated user returned to us
-  //console.log(episodes);
-//});
+//   // we have the updated user returned to us
+//   // console.log(episodes);
+// });
 

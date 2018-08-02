@@ -1,89 +1,103 @@
 'use strict';
 const express = require("express");
 const app = express();
-//var episodes = require("./lib/episodes.js");
+var bodyParser = require('body-parser');
+var Episodes = require('./models/episode');
 
-var episodeMethods = require ("./models/episodeMethods.js");
 app.use(express.static('public'));
-
+app.use(require("body-parser").urlencoded({extended: true}));
+app.use(bodyParser.json());
 let handlebars =  require("express-handlebars");
 app.engine(".html", handlebars({extname: '.html'}));
 app.set("view engine", ".html");
+var episodeMethods = require ("./models/episodeMethods.js");
 
 
-app.get('/', (req, res, next) => {
-  episodeMethods.getAll().then((items) => {
-    res.render('../public/home.html', {episodes: items }); 
-  }).catch((err) =>{
-    return next(err);
-  });
+app.get('/', (req, res)=> {
+    res.render('home');
+   
 });
 
-app.get('/get', (req, res, next) => {
- //console.log(req.query);
- episodeMethods.getOne(req.query.epnum).then((items) => {
+app.get('/episode', (req, res, next) => {
+     episodeMethods.getOne(req.query.epnum).then((items) => {
      res.render('details', {result: items}); 
-  }).catch((err) =>{
-    return next(err);
+        }).catch((err) =>{
+        return next(err);
  });
 });
-
-app.post('/get', (req, res) => {
-  console.log(req.body); // display parsed form submission
-});
-
-
-
 
 app.get('/delete', (req,res, next) => {
+    episodeMethods.killOne(req.query.epnum).then((items) => {
+    res.render('delete', {result: items}); 
+        }).catch((err) =>{
+        return next(err);
+ });
+});
+
+
+
+app.get('/add', (req, res, result)=>{
+     res.render('add');
+     return Episodes.create({epnum: '5', title: 'Billy', season: '9' });
+  
+});
+
+
+app.post('/add', (req, res, result)=>{
+     res.render('add');
+    //  return Episodes.create({epnum: '4'});
+  
+});
+// app.post('/add', (req, res, next)=>{
+//      res.render('added');
+//   return Episodes.create({epnum: epnum, title: title, season: season })
+   
+    
+    //console.log(result);
+   
+   
+ 
+
+
+//apis
+
+
+
+
+app.get('/api/episodes', (req, res) => {
+        Episodes.find(function(err, result){
+            if (err)
+           return res.send(err);
+            res.json(result);
+        });
+    });
+    
+    
+app.get('/api/episode/:epnum', (req, res, next) => {
+       episodeMethods.getOne(req.query.epnum).then((item) => {
+     res.json(item); 
+  }).catch((err) =>{
+    return next(err);
+  
+ });
+    });
+    
+    app.get('api/delete/:epnum', (req,res, next) => {
  episodeMethods.killOne(req.query.epnum).then((items) => {
-     res.render('delete', {result: items}); 
+     res.json('delete', {result: items}); 
   }).catch((err) =>{
     return next(err);
  });
 });
 
-app.post('/delete', (req, res) => {
-  console.log(req.body); // display parsed form submission
-});
+
+
+var port = process.env.PORT || 3000;
 
 
 
-//app.get('/get', (req, res, next) => {
-  //Episode.find({}, function (err, epnum) {
-   // if (err) return next(err);
-    //console.log(epnum);
-  //  res.render('../views/details.html', {episodes: epnum }); 
- //// });
-//});
 
-//app.get('/get', (req,res) => {
-// let result = episodeMethods.getOne(req.query.epnum);
-// res.render(__dirname + '/views/details.html', {epnum: req.query.epnum, result: result }); 
-//});
-
-
-// send content of 'home' view
-app.get('/', (req,res) => {
- res.render('home');
-});
-
-
-// define 404 handler
-app.use( (req,res) => {
- res.type('text/plain'); 
- res.status(404);
- res.send('404 - Not found');
-});
-app.set('port', process.env.PORT || 3000);
-app.use(express.static(__dirname + '/public')); // set location for static files
-app.use(require("body-parser").urlencoded({extended: true})); // parse form submissions
-
-app.listen(app.get('port'), () => {
- console.log('Express started'); 
-});
-
-
-
+app.listen(port);
+console.log('Magic happens on port ' + port);
 
 

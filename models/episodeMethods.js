@@ -27,6 +27,17 @@ exports.getOne = (epnum1) => {
   
 };
 
+exports.addOne = (epnum1) => {
+  return Episodes.create({epnum: epnum1}, (err, result) => {
+    if (err) {
+      return err;
+    } 
+  });
+  
+};
+
+
+
 exports.killOne = (epnum1) => {
   
   return Episodes.findOne({epnum: epnum1}, (err, result) =>{
