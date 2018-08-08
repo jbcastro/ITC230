@@ -13,15 +13,12 @@ app.set("view engine", ".html");
 var episodeMethods = require ("./models/episodeMethods.js");
 
 
-app.get('/', (req, res, next) => {
-  episodeMethods.getAll().then((items) => {
-    res.render('home', {episodes: items }); 
-  }).catch((err) =>{
-    return next(err);
-  });
+app.get('/', (req, res)=> {
+    res.render('home');
+   
 });
 
-app.get('/get', (req, res, next) => {
+app.get('/episode', (req, res, next) => {
      episodeMethods.getOne(req.query.epnum).then((items) => {
      res.render('details', {result: items}); 
         }).catch((err) =>{
@@ -37,47 +34,20 @@ app.get('/delete', (req,res, next) => {
  });
 });
 
-// app.post('//add/epnum:epnum, next
-//      res.render('add');
-//         return Episodes.create({ title: req.params.title, season: req.params.season, epnum: req.params.epnum });
+
+
+app.get('/add', (req, res, result)=>{
+     res.render('add');
+     return Episodes.create({epnum: '5', title: 'Billy', season: '9' });
   
-// });
-
-
-app.post('/add', function(req, res) {
-   
-    console.log(req.body);
-   
-   Episodes.update({'epnum':req.body.epnum,}, req.body, {upsert:true}, (err, result) => {
-
-  console.log(result);
-  res.render('added', {result: req.body});
-}); 
-   
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-// app.post('/add/title/:title/season/:season/epnum:epnum', (req, res, result)=>{
-//      res.render('add');
-//      Episodesepnum: req.perams.epnum, pum itle:ult.t;seasotitle
+app.post('/add', (req, res, result)=>{
+     res.render('add');
+    //  return Episodes.create({epnum: '4'});
   
-// });
-
-
-
+});
 // app.post('/add', (req, res, next)=>{
 //      res.render('added');
 //   return Episodes.create({epnum: epnum, title: title, season: season })
@@ -129,3 +99,5 @@ var port = process.env.PORT || 3000;
 
 app.listen(port);
 console.log('Magic happens on port ' + port);
+
+

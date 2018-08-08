@@ -1,0 +1,23 @@
+<html>
+<body>
+  <h2>Details for {{epnum}}</h2>
+  {{#if result}}
+    <li>Title: {{ result.title }}
+    <li>Season: {{ result.season }}
+    <li>Epnum: {{ result.epnum }}
+    <p>
+    <a href="/delete?epnum={{result.epnum}}">Delete?</a>
+</p>
+         <p>
+        <button> <a href=/>Home</a></button>
+        </p>
+  {{else}}
+ <p> Not Found</p>
+  <a href=/>Home</a>
+    
+  {{/if}}
+ <script>
+   
+ </script>
+</body>
+</html

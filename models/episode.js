@@ -14,10 +14,6 @@ season: String,
  }); 
 // var Episodes = mongoose.model('Episode', mySchema);
  
-
-
-
-
 module.exports = mongoose.model('Episode', mySchema);
 
 

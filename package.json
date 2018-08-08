@@ -1,5 +1,5 @@
 {
-  "name": "itc_230",
+  "name": "eps",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -21,5 +21,6 @@
     "express": "^4.16.3",
     "express-handlebars": "^3.0.0",
     "mongoose": "^5.2.4"
-  }
+  },
+  "devDependencies": {}
 }

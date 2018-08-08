@@ -27,11 +27,10 @@ exports.getOne = (epnum1) => {
   
 };
 
-exports.addOne = (epnum1) => {
-  return Episodes.create({epnum: epnum1}, (err, result) => {
-    if (err) {
-      return err;
-    } 
+exports.addOne = ( title1, season1, epnum1) => {
+  return Episodes.create({title: title1, season:season1, epnum: epnum1}, (err, result) => {
+     if (err) throw err;
+    return result;
   });
   
 };
