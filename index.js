@@ -15,7 +15,7 @@ var episodeMethods = require ("./models/episodeMethods.js");
 
 app.get('/', (req, res, next) => {
   episodeMethods.getAll().then((items) => {
-    res.render('home', {episodes: items }); 
+    res.render('home', {episodes: JSON.stringify(items) }); 
   }).catch((err) =>{
     return next(err);
   });

@@ -1,0 +1,38 @@
+<html>
+<body>
+Please enter the episode number you area searching for
+<p>
+    {{#each episodes}}
+    {{title}}
+{{/each}}
+<form action = get method = "GET">
+         Episode Number: <input type = "text" name = "epnum">
+         
+         <input type = "submit" value = "Submit">
+         </form>
+         
+
+         </p>
+         <p>
+    
+
+<form method = "POST" action="/add">
+         Episode Number: <input type = "text" name = "epnum">
+         Episode Title: <input type = "text" name = "title">
+         Episode Season: <input type = "text" name = "season">
+         <input type = "submit" value = "Submit">
+         </form>
+         
+
+         </p>
+         
+<script>
+//var x = prompt("What episode numer");
+  //  function getep(epnum1){
+    //    return x;
+    //}
+    
+    
+</script>
+</body>
+</html>
