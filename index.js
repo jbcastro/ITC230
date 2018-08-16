@@ -23,7 +23,7 @@ app.get('/', (req, res, next) => {
 
 app.get('/get', (req, res, next) => {
      episodeMethods.getOne(req.query.epnum).then((items) => {
-     res.render('details', {result: items}); 
+     res.render('details', {episodes: JSON.stringify(items) });
         }).catch((err) =>{
         return next(err);
  });
@@ -31,7 +31,7 @@ app.get('/get', (req, res, next) => {
 
 app.get('/delete', (req,res, next) => {
     episodeMethods.killOne(req.query.epnum).then((items) => {
-    res.render('delete', {result: items}); 
+    res.render('delete', {episodes: JSON.stringify(items) });
         }).catch((err) =>{
         return next(err);
  });
@@ -61,40 +61,21 @@ app.post('/add', function(req, res) {
 
 
 
-
-
-
-
-
-
-
-
-
-// app.post('/add/title/:title/season/:season/epnum:epnum', (req, res, result)=>{
-//      res.render('add');
-//      Episodesepnum: req.perams.epnum, pum itle:ult.t;seasotitle
-  
-// });
-
-
-
-// app.post('/add', (req, res, next)=>{
-//      res.render('added');
-//   return Episodes.create({epnum: epnum, title: title, season: season })
+app.post('/api/v1/add', function(req, res) {
    
-    
-    //console.log(result);
+    console.log(req.body);
    
+   Episodes.update({'epnum':req.body.epnum,}, req.body, {upsert:true}, (err, result) => {
+
+  console.log(result);
+  res.render('added', {result: req.body});
+}); 
    
- 
-
-
-//apis
+});
 
 
 
-
-app.get('/api/episodes', (req, res) => {
+app.get('/api/v1/episodes', (req, res) => {
         Episodes.find(function(err, result){
             if (err)
            return res.send(err);
@@ -103,22 +84,46 @@ app.get('/api/episodes', (req, res) => {
     });
     
     
-app.get('/api/episode/:epnum', (req, res, next) => {
-       episodeMethods.getOne(req.query.epnum).then((item) => {
-     res.json(item); 
-  }).catch((err) =>{
-    return next(err);
-  
- });
+app.get('/api/v1/episode/:epnum', (req, res, next) => {
+    let epnum = req.params.epnum;
+    console.log(epnum);
+   Episodes.findOne({epnum: epnum}, (err, result) => {
+        if (err || !result) return next(err);
+        res.json( result );    
     });
-    
-    app.get('api/delete/:epnum', (req,res, next) => {
- episodeMethods.killOne(req.query.epnum).then((items) => {
-     res.json('delete', {result: items}); 
-  }).catch((err) =>{
-    return next(err);
- });
 });
+
+
+app.get('/api/v1/delete/:epnum', (req, res, next) => {
+    let epnum = req.params.epnum;
+    console.log(epnum);
+   Episodes.remove({epnum: epnum}, (err, result) => {
+        if (err || !result) return next(err);
+        res.json( result );    
+    });
+});
+
+
+
+//app.get('/api/v1/delete/:epnum', (req, res, next)=> {
+//    let epnum= req.params.epnum;
+//    console.log(epnum);
+//    Episodes.findOne({epnum: epnum}, (err, result)=>{
+//        if (err || !result) return next(err);
+//        result.remove(function(err){
+//            if (err || !result) return next(err);
+//            res.json( result );
+//        });
+//    });
+//});
+    
+//    app.get('api/v1/delete/:epnum', (req,res, next) => {
+// episodeMethods.killOne(req.query.epnum).then((items) => {
+//     res.json('delete', {result: items}); 
+//  }).catch((err) =>{
+//    return next(err);
+// });
+//});
 
 
 

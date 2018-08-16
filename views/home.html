@@ -14,7 +14,8 @@
     <div id="root"></div>
     
     <script type="text/babel">
-    
+
+
    
    const EpisodeList = (props) => {
    
@@ -33,22 +34,36 @@
      </div>
      
    }
+
+   
+   
     
+   
+   
+   
+   
+   
     
    class App extends React.Component {
      constructor(props) {
        super(props);
+         
        this.state = {
-         episodes: {{{episodes}}},
-         current_episode: {}
+         episodes:{{{episodes}}},
+             filter: "",
+         current_episode: {},
+        
          
        };
        
-       
+        
        this.showDetail = this.showDetail.bind(this);
+       this.onDelete = this.onDelete.bind(this);
+       this.onAdd = this.onAdd.bind(this);
+this.onSearch = this.onSearch.bind(this);
      }
   
-    
+   
      showDetail(event) {
       
        var found = this.state.episodes.find((item) =>{
@@ -58,19 +73,149 @@
       this.setState({current_episode: found})
        
      }
-     
+
+          
+            
+//      onDelete(){
+//        let id = this.state.current_episode.epnum;
+//        
+//        fetch("/api/v1/delete/" + id).then((response) => {
+//          return response.json();
+//        }).then((results) => {
+//          // Filter all items except the one to be removed
+//          const remainder = this.state.items.filter((episodes) => {
+//            return item.epnum !== id;
+//          });
+//          // Update state with new array
+//          this.setState({episodes: remainder, episode: {}});
+//        });
+//          
+//      }
+        
+    onDelete(){
+        let id = this.state.current_episode.epnum;
+        let butt = this.state.episodes;
+        
+            fetch('api/v1/delete/' + id, {
+               method: "GET",
+               headers: { 'Content-Type': 'application/json' },
+               body: JSON.stringify()
+                
+                }).then(res => res.json())
+             .then(json => this.setState({episodes: butt }))
+            }
+           
+               
+
+                
+
+
+
+onSubmit(event) {
+    event.preventDefault();
+    console.log(this.epnumInput.value);
+
+}
+
+onClick(event){
+    event.preventDefault();
+}
+
+onAdd(event){
+    fetch('add',  {
+        method: 'POST',
+  headers: {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    epnum: this.epnumInput.value,
+    season: this.seasonInput.value,
+      title: this.titleInput.value,
+      
+  })
+})
+}
+
+   
+        
      render() {
        
        return <div>
         <h2>Page Title</h2>
         <EpisodeList show={this.showDetail} episodes={this.state.episodes} />
         <Detail episode={this.state.current_episode} />
+        
+           <button onClick={this.onDelete.bind(this)}>
+        Delete?
+      </button>
+           <form onSubmit={this.onAdd.bind(this)}>
+          <input placeholder="epnum" ref={epnumInput => this.epnumInput = epnumInput}/>
+            <input placeholder="title" ref={titleInput => this.titleInput = titleInput}/>
+            <input placeholder="season" ref={seasonInput => this.seasonInput = seasonInput}/>
+           <button>Add</button>
+               </form>
+           <hr/>
         </div>
        
      }
    }
+   
+   
+   
+//   class LoggingButton extends React.Component {
+//  handleClick() {
+//    console.log('this is:', this);
+//      
+//  }
+//
+//  render() {
+//    // This syntax ensures `this` is bound within handleClick
+//    return (
+//      <button onClick={(e) => this.handleClick(e)}>
+//        Delete
+//      </button>
+//    );
+//  }
+//}
+   
+   
+   
+//   class NameForm extends React.Component {
+//  constructor(props) {
+//    super(props);
+//    this.state = {value: ''};
+//
+//    this.handleChange = this.handleChange.bind(this);
+//    this.handleSubmit = this.handleSubmit.bind(this);
+//  }
+//
+//  handleChange(event) {
+//    this.setState({value: event.target.value});
+//  }
+//
+//  handleSubmit(event) {
+//    
+//    event.preventDefault();
+//  }
+//
+//  render() {
+//    return (
+//      <form onSubmit={this.handleSubmit}>
+//        <label>
+//          Name:
+//          <input type="text" value={this.state.value} onChange={this.handleChange} />
+//        </label>
+//        <input type="submit" value="Submit" />
+//      </form>
+//    );
+//  }
+//}
     
-    ReactDOM.render(  <App />,  document.getElementById('root') );
+    ReactDOM.render( <div>
+        <App />
+        
+        </div> ,  document.getElementById('root') );
     
     
     

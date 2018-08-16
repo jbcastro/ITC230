@@ -10,13 +10,18 @@ conn.on('error', console.error.bind(console, 'connection error:'));
 var mySchema = mongoose.Schema({
 epnum: { type: String, required: true },
 season: String,
-  title: String,
+  title: String},{
+  versionKey: false
  }); 
-// var Episodes = mongoose.model('Episode', mySchema);
+
  
 module.exports = mongoose.model('Episode', mySchema);
 
 
+
+
+
+// var Episodes = mongoose.model('Episode', mySchema);
 
 //Episodes.find({}, function (err, epnum){
   //if (err) throw err;
