@@ -17,7 +17,8 @@
          const EpisodeList = (props) => {
 
            let items = props.episodes.map((episode) => {
-             return <li onClick={props.show} id={episode._id} key={episode._id}>{episode.title}</li>
+             return <li onClick={props.show}
+             id={episode._id} key={episode._id}>{episode.title}</li>
            })
              console.log(items);
            return <ul>{items}</ul>

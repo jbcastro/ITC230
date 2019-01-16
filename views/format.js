@@ -1,5 +1,5 @@
 
-          let EPISODES={{{episodes}}};
+        
 
 
         function EpisodeList(props) {

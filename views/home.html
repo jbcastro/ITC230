@@ -13,83 +13,162 @@
     <div id="root"></div>
 
     <script type="text/babel">
-          let EPISODES={{{episodes}}};
+
+                    let EPISODES={{{episodes}}};
 
 
-        function EpisodeList(props) {
-        const content = props.episodes.map((episode) =>
-          <div key={episode.epnum}>
-            <h3>title={episode.title}</h3>
-            <p>season={episode.season}</p>
-          </div>
-        );
-        return (
-          <div>
+                    const EpisodeList = (props) => {
 
-            <hr />
-            {content}
-          </div>
-        );
+            let items = props.episodes.map((episode) => {
+              return <li onClick={props.show}
+              id={episode._id} key={episode._id}>{episode.title}</li>
+            })
+              console.log(items);
+            return <ul>{items}</ul>
+            }
+
+
+            const Detail = (props) => {
+            console.log(props.episode)
+            return <div>
+
+            </div>
+
+            }
+
+
+                      class App extends React.Component {
+                        constructor(props) {
+                          super(props);
+                          this.state = {
+                            episodes:{{{episodes}}},
+                            curItem:{},
+                            filter:""
+                            };
+                    this.showDetail = this.showDetail.bind(this);
+                   this.onDelete = this.onDelete.bind(this);
+                   this.onAdd = this.onAdd.bind(this);
+                   this.handleChange = this.handleChange.bind(this);
+                   this.onSubmit = this.onSubmit.bind(this);
+                   this.onClick = this.onClick.bind(this);
+
+
+                        }
+                        showDetail(event) {
+
+      var found = this.state.episodes.find((item) =>{
+      return item._id === event.target.id;
+      });
+      this.setState({curItem: found})
+
+      }
+
+
+      onDelete(){
+        let id = this.state.curItem.epnum;
+
+        fetch("/api/v1/delete/" + id).then((response) => {
+          return response.json();
+        }).then((results) => {
+          // Filter all items except the one to be removed
+          const remainder = this.state.items.filter((item) => {
+            return item._id !== id;
+          });
+          // Update state with new array
+          this.setState({items: remainder, curItem: {}});
+        });
       }
 
 
 
 
-                        // const EpisodeList = (props) => {
 
-                        // let items = props.episodes.map((episode) => {
+                        onClick(event){
 
-                        // })
-                        //   console.log(items);
-                        // return <ul>{items}</ul>
-                        // }
-
-                        // function ListItem(props){
-                        //   return<li>{props.title}</li>
-
-                        // }
-
-
-                        // function EpisodeList(props) {
-                        //   const episodes = props.episodes;
-                        //   return (
-                        //     <ul>{episodes.map((episode)=>
-                        //       <ListItem key={episode.epnum}
-                        //       title={episode.title}
-                        //       />
-
-                        //       )}
-                        //       </ul>
-                        //   );
-                        //     }
+                        }
 
 
 
 
-                              class App extends React.Component {
-                                constructor(props) {
-                                  super(props);
-                                  this.state = {
-                                    episodes:{{{episodes}}}
-                                   };
-                                }
-                                render() {
-                                  return (<div>
-                                      <h2>Title</h2>
-                                      <EpisodeList show={this.showDetail}episodes = {this.state.episodes}/>
-                                    </div>
-
-                                   );
-                                }
-                              }
 
 
+                                onAdd(){
+
+                    fetch('add',  {
+                        method: 'POST',
+                    headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                    epnum: this.epnumInput.value,
+                    season: this.seasonInput.value,
+                      title: this.titleInput.value,
+
+                    })
+                    })
+                    }
 
 
-                              ReactDOM.render(
-                                 <EpisodeList episodes={EPISODES} />,
 
-                                    document.getElementById('root') );
+
+
+
+
+
+                    handleChange(event) {
+           this.setState({curItem:{}});
+
+        }
+
+
+
+
+        onSubmit(event){
+         this.setState({curItem:{}});
+          }
+
+
+
+                        render() {
+                          return <div>
+              <h2>Page Title</h2>
+              <EpisodeList show={this.showDetail} episodes={this.state.episodes} />
+              <Detail episode={this.state.curItem} />
+
+                 <form>
+                  title:
+                  <input type="text" placeholder={this.state.curItem.title} defaultValue={this.state.curItem.title} ref={titleInput => this.titleInput = titleInput} onChange={this.handleChange}/>
+                     <p>
+                     season:
+                  <input type="text" placeholder={this.state.curItem.season} defaultValue={this.state.curItem.season} ref={seasonInput => this.seasonInput = seasonInput} onChange={this.handleChange}/>
+                         </p>
+                     <p>
+                             epnum:
+
+                  <input type="text" placeholder={this.state.curItem.epnum} defaultValue={this.state.curItem.epnum} ref={epnumInput => this.epnumInput = epnumInput} onChange={this.handleChange} />
+                         </p>
+                 <button onClick={this.onAdd}>Save</button>
+
+                     </form>
+                <button onClick={this.onDelete}>Delete</button>
+                 <form type="reset">
+              <button>Clear</button>
+              </form>
+                 <hr/>
+              </div>
+
+
+                        }
+                      }
+
+
+
+
+                    ReactDOM.render(
+                        <App episodes={EPISODES} />,
+
+                          document.getElementById('root') );
     </script>
     <!--
       Note: this page is a great way to try React but it's not suitable for production.
