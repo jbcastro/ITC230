@@ -23,13 +23,10 @@
            return <ul>{items}</ul>
          }
 
+
          const Detail = (props) => {
            console.log(props.episode)
            return <div>
-
-           Name: <input type ="text" value ={props.episode.title}/>
-           season: <input type="text" value={props.episode.season}/>
-           epnum: <input type="text" value= {props.episode.epnum}/>
 
            </div>
 
@@ -52,8 +49,11 @@
              this.showDetail = this.showDetail.bind(this);
              this.onDelete = this.onDelete.bind(this);
              this.onAdd = this.onAdd.bind(this);
+             this.handleChange = this.handleChange.bind(this);
              this.onSubmit = this.onSubmit.bind(this);
-      //       this.onClick = this.onClick.bind(this);
+             this.onClick = this.onClick.bind(this);
+
+
            }
 
 
@@ -67,113 +67,50 @@
            }
 
 
-      //      onDelete(){
-      //        let id = this.state.current_episode.epnum;
-      //
-      //        fetch("/api/v1/delete/" + id).then((response) => {
-      //          return response.json();
-      //        }).then((results) => {
-      //          // Filter all items except the one to be removed
-      //          const remainder = this.state.items.filter((episodes) => {
-      //            return item.epnum !== id;
-      //          });
-      //          // Update state with new array
-      //          this.setState({episodes: remainder, episode: {}});
-      //        });
-      //
-      //      }
+
 
           onDelete(){
-              let id = this.state.current_episode.epnum._id;
-              let eps = {{{episodes}}};
-      //        event.preventDefault();
-      //        return true;
+              event.preventDefault();
+              let id = this.state.current_episode.epnum;
+              let eps = EpisodeList;
+              event.preventDefault();
+      //        return false;
 
-      fetch("/api/v1/delete/" + id).then((response) => {
-          return response.json();
-        }).then((results) => {
-          // Filter all items except the one to be removed
-          const remainder = this.state.items.filter((item) => {
-            return item._id !== id;
-          });
-          // Update state with new array
-          this.setState({items: remainder, curItem: {}});
-        });
-      }
+                  fetch('api/v1/delete/' + id, {
+                     method: "GET",
+                     headers: { 'Content-Type': 'application/json' },
+                     body: JSON.stringify()
 
-                  // fetch('api/v1/delete/' + id).then {
-                  //    method: "GET",
-                  //    headers: { 'Content-Type': 'application/json' },
-                  //    body: JSON.stringify()
-
-                  //     }).then(res => res.json())
-                  //  .then(json => this.setState({eps, isLoading:false }))
-                  // }
+                      })
+                      .then(res => res.json())
+                   .then(json => this.setState({eps,  }))
+                  }
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                     onAdd(){
-          let newItem = this.state.current_episode;
-
-          if(!newItem.epnum){
-              return;
-
-          fetch('add',  {
-              method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          epnum: this.epnumInput.value,
-          season: this.seasonInput.value,
-            title: this.titleInput.value,
+       handleChange(event) {
+           this.setState({current_episode:{}});
+      event.preventDefault();
         }
-        )})}
-              else{
-                  fetch('add',  {
-              method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          epnum: this.newItem.epnum,
-          season: this.newItem.season,
-            title: this.newItem.title,
+
+       onClick(event) {
+           this.setState({current_episode:{}});
+      event.preventDefault();
+
         }
-              )}
 
-      )}this.setState({current_episode: found})
-      }
-
-      onSubmit=()=> {
-       event.stopPropagation();
-        event.nativeEvent.stopImmediatePropagation();
+      onSubmit(event){
+         this.setState({current_episode:{}});
           event.preventDefault();
-      }
 
+
+
+      }
 
 
       onAdd(){
+
           fetch('add',  {
               method: 'POST',
         headers: {
@@ -184,22 +121,6 @@
           epnum: this.epnumInput.value,
           season: this.seasonInput.value,
             title: this.titleInput.value,
-
-        })
-      })
-      }
-
-      onEdit(){
-          fetch('add',  {
-              method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          epnum: this.state.current_episode.epnum,
-          season: this.state.current_episode.season,
-            title: this.state.current_episode.title,
 
         })
       })
@@ -210,31 +131,28 @@
 
              return <div>
               <h2>Page Title</h2>
-                 <form onChange={this.onEdit}>
               <EpisodeList show={this.showDetail} episodes={this.state.episodes} />
               <Detail episode={this.state.current_episode} />
-                 <button>Edit</button>
-                 </form>
 
-
-
-
-              <form onSubmit={this.onDelete}>
-
-
-
-
-                 <button>
-              Delete?
-            </button>
-              </form>
                  <form onSubmit={this.onAdd}>
+                  title:
+                  <input type="text" placeholder={this.state.current_episode.title} defaultValue={this.state.current_episode.title} ref={titleInput => this.titleInput = titleInput} onChange={this.handleChange}/>
+                     <p>
+                     season:
+                  <input type="text" placeholder={this.state.current_episode.season} defaultValue={this.state.current_episode.season} ref={seasonInput => this.seasonInput = seasonInput} onChange={this.handleChange}/>
+                         </p>
+                     <p>
+                             epnum:
 
-                  <input placeholder={this.state.current_episode.title} value={this.state.episodes.title} ref={titleInput => this.titleInput = titleInput}/>
-                  <input placeholder={this.state.current_episode.season} value="" ref={seasonInput => this.seasonInput = seasonInput}/>
-                  <input placeholder={this.state.current_episode.epnum} value="" ref={epnumInput => this.epnumInput = epnumInput} />
-                 <button>Add</button>
+                  <input type="text" placeholder={this.state.current_episode.epnum} defaultValue={this.state.current_episode.epnum} ref={epnumInput => this.epnumInput = epnumInput} onChange={this.handleChange} />
+                         </p>
+                 <button>Save</button>
+
                      </form>
+                <button onClick={this.onDelete}>Delete</button>
+                 <form type="reset">
+              <button>Clear</button>
+              </form>
                  <hr/>
               </div>
 
